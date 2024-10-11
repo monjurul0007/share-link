@@ -5,8 +5,8 @@ import { TbMenu } from 'react-icons/tb';
 import { MobileUiContext } from '@/contexts/MobileUiContext';
 import { UserLink } from '@/models/Links';
 import { PLATFORMS, PLATFORMS_NAME } from '@/utils/constant';
+import Input from './Form/Input';
 import FormWrapper from './FormWrapper';
-import Input from './Input';
 
 export default function LinksSection() {
     const { handleState, links: UserLinks } = useContext(MobileUiContext);

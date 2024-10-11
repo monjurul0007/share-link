@@ -4,13 +4,20 @@ import React, { ChangeEventHandler, useContext, useState } from 'react';
 import { IoImageOutline } from 'react-icons/io5';
 import Image from 'next/image';
 import { MobileUiContext } from '@/contexts/MobileUiContext';
+import TextInput from './Form/TextInput';
 import FormWrapper from './FormWrapper';
-import Input from './Input';
 
 export default function ProfileSection() {
-    const { firstName: fName, lastName: lName, email, handleState } = useContext(MobileUiContext);
+    const {
+        id,
+        firstName: fName,
+        lastName: lName,
+        email,
+        handleState,
+    } = useContext(MobileUiContext);
     const [firstName, setFirstName] = useState(fName || '');
     const [lastName, setLastName] = useState(lName || '');
+    const [error, setError] = useState<Record<string, string>>({});
 
     const handleFirstName: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = event.target.value;
@@ -31,11 +38,32 @@ export default function ProfileSection() {
         handleState?.('email', value);
     };
 
+    const onUpdateUserInfo = async () => {
+        const response = await fetch('/api/user/info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Tells the server you're sending JSON data
+            },
+            body: JSON.stringify({
+                id,
+                firstName,
+                lastName,
+                email,
+            }),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+
+            setError(error);
+        }
+    };
+
     return (
         <FormWrapper
             title="Profile Details"
             subTitle="Add your details to create a personal touch to you profile."
-            onSave={() => undefined}
+            onSave={onUpdateUserInfo}
         >
             <div className="px-5 py-4 bg-[#fafafa] rounded-md flex flex-col sm:flex-row sm:items-center">
                 <span className="sm:w-1/3 text-gray-500">Profile picture</span>
@@ -62,22 +90,24 @@ export default function ProfileSection() {
             </div>
 
             <div className="mt-3 px-5 py-4 bg-[#fafafa] rounded-md flex flex-col items-center">
-                <div className="flex flex-col sm:flex-row sm:items-center w-full my-2">
-                    <label className="w-1/3 text-base text-gray-500">First Name</label>
-                    <Input
-                        value={firstName}
-                        className="sm:w-2/3 w-full"
-                        onChange={handleFirstName}
-                    />
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center w-full my-2">
-                    <label className="w-1/3 text-base text-gray-500">Last Name</label>
-                    <Input value={lastName} className="sm:w-2/3 w-full" onChange={handleLastName} />
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center w-full my-2">
-                    <label className="w-1/3 text-base text-gray-500">Email</label>
-                    <Input value={email} className="sm:w-2/3 w-full" onChange={handleEmail} />
-                </div>
+                <TextInput
+                    label="First Name"
+                    value={firstName}
+                    onChange={handleFirstName}
+                    error={error?.firstName}
+                />
+                <TextInput
+                    label="Last Name"
+                    value={lastName}
+                    onChange={handleLastName}
+                    error={error?.lastName}
+                />
+                <TextInput
+                    label="Email"
+                    value={email}
+                    onChange={handleEmail}
+                    error={error?.email}
+                />
             </div>
         </FormWrapper>
     );

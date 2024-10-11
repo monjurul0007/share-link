@@ -2,8 +2,11 @@
 
 import { FC, ReactNode, createContext, useMemo, useState } from 'react';
 import { UserLink } from '@/models/Links';
+import { IUser } from '@/models/db/Users';
+import { divideString } from '@/utils/string';
 
 interface MobileUiContextProps {
+    id?: string;
     firstName?: string;
     lastName?: string;
     email?: string;
@@ -12,17 +15,26 @@ interface MobileUiContextProps {
 }
 
 export const MobileUiContext = createContext<MobileUiContextProps>({
+    id: undefined,
     firstName: undefined,
     lastName: undefined,
     email: undefined,
     links: [],
 });
 
-export const MobileUiContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [links, setLinks] = useState<UserLink[]>([]);
+export const MobileUiContextProvider: FC<{ user: IUser | null; children: ReactNode }> = ({
+    user,
+    children,
+}) => {
+    const [fName, lName] = divideString(user?.name || '');
+    const [firstName, setFirstName] = useState(
+        user?.firstName && user.lastName ? user.firstName : fName,
+    );
+    const [lastName, setLastName] = useState(
+        user?.firstName && user?.lastName ? user.lastName : lName,
+    );
+    const [email, setEmail] = useState(user?.email);
+    const [links, setLinks] = useState<UserLink[]>(user?.links || []);
 
     const handleState = (name: keyof MobileUiContextProps, value: string | UserLink[]) => {
         switch (name) {
@@ -45,6 +57,7 @@ export const MobileUiContextProvider: FC<{ children: ReactNode }> = ({ children 
 
     const contextValue = useMemo(
         () => ({
+            id: user?.id || '',
             firstName,
             lastName,
             email,
