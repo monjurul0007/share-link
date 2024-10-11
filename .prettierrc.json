@@ -1,0 +1,42 @@
+{
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "semi": true,
+    "useTabs": false,
+    "tabWidth": 4,
+    "bracketSpacing": true,
+    "endOfLine": "lf",
+    "overrides": [
+        {
+            "files": "*.scss",
+            "options": {
+                "singleQuote": false
+            }
+        },
+        {
+            "files": "*.html",
+            "options": {
+                "singleQuote": false
+            }
+        }
+    ],
+    "importOrder": [
+        "^react",
+        "^next/(.*)$",
+        "^@headlessui",
+        "^mongodb",
+        "<THIRD_PARTY_MODULES>",
+        "^@lib/(.*)$",
+        "^@models/(.*)$",
+        "^@dto/(.*)$",
+        "^@components/(.*)$",
+        "^@controller/(.*)$",
+        "^@service/(.*)$",
+        "^@repository/(.*)$",
+        "^@utils/(.*)$",
+        "^[./]"
+    ],
+    "importOrderSortSpecifiers": true,
+    "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"]
+}
