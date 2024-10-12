@@ -1,4 +1,5 @@
 import { Collection, Db, WithId } from 'mongodb';
+import { UserLinks } from '@/models/api/userLink';
 import { IUser } from '@/models/db/Users';
 
 export default class UserRepository {
@@ -35,15 +36,20 @@ export default class UserRepository {
         return user;
     }
 
-    async updateById(id: string, data: { firstName?: string; lastName?: string; email?: string }) {
-        let user: WithId<IUser> | null = null;
-
+    async updateById(
+        id: string,
+        data: {
+            firstName?: string;
+            lastName?: string;
+            email?: string;
+            links?: UserLinks[];
+            imageData?: Buffer;
+        },
+    ) {
         if (this._collection) {
             await this._collection.updateOne({ id }, { $set: { ...data } }, { upsert: true });
         } else {
             throw new Error('Can not fetch user by id.');
         }
-
-        return user;
     }
 }

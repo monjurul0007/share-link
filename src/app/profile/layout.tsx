@@ -22,7 +22,7 @@ export default async function ProfileLayout({
         <div className="container mx-auto px-3 lg:px-0">
             <NavBar />
             <div className="flex">
-                <MobileUiContextProvider user={userInfo}>
+                <MobileUiContextProvider userDataString={JSON.stringify(userInfo)}>
                     <MobileUI />
                     {children}
                 </MobileUiContextProvider>

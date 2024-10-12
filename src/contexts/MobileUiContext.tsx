@@ -7,6 +7,7 @@ import { divideString } from '@/utils/string';
 
 interface MobileUiContextProps {
     id?: string;
+    imageSrc?: string;
     firstName?: string;
     lastName?: string;
     email?: string;
@@ -19,13 +20,16 @@ export const MobileUiContext = createContext<MobileUiContextProps>({
     firstName: undefined,
     lastName: undefined,
     email: undefined,
+    imageSrc: undefined,
     links: [],
 });
 
-export const MobileUiContextProvider: FC<{ user: IUser | null; children: ReactNode }> = ({
-    user,
-    children,
-}) => {
+export const MobileUiContextProvider: FC<{
+    userDataString: string | null;
+    children: ReactNode;
+}> = ({ userDataString, children }) => {
+    const user = JSON.parse(userDataString || '') as IUser;
+    const imageUrl = user?.imageData ? `data:image/png;base64,${user.imageData}` : undefined;
     const [fName, lName] = divideString(user?.name || '');
     const [firstName, setFirstName] = useState(
         user?.firstName && user.lastName ? user.firstName : fName,
@@ -35,9 +39,13 @@ export const MobileUiContextProvider: FC<{ user: IUser | null; children: ReactNo
     );
     const [email, setEmail] = useState(user?.email);
     const [links, setLinks] = useState<UserLink[]>(user?.links || []);
+    const [imageSrc, setImageSrc] = useState<string | undefined>(imageUrl);
 
     const handleState = (name: keyof MobileUiContextProps, value: string | UserLink[]) => {
         switch (name) {
+            case 'imageSrc':
+                setImageSrc(value as string);
+                break;
             case 'firstName':
                 setFirstName(value as string);
                 break;
@@ -58,13 +66,14 @@ export const MobileUiContextProvider: FC<{ user: IUser | null; children: ReactNo
     const contextValue = useMemo(
         () => ({
             id: user?.id || '',
+            imageSrc,
             firstName,
             lastName,
             email,
             links,
             handleState,
         }),
-        [email, firstName, lastName, links],
+        [email, firstName, imageSrc, lastName, links, user?.id],
     );
 
     return <MobileUiContext.Provider value={contextValue}>{children}</MobileUiContext.Provider>;

@@ -1,16 +1,18 @@
 'use client';
 
 import React, { useContext, useEffect, useState } from 'react';
-import { TbMenu } from 'react-icons/tb';
 import { MobileUiContext } from '@/contexts/MobileUiContext';
 import { UserLink } from '@/models/Links';
-import { PLATFORMS, PLATFORMS_NAME } from '@/utils/constant';
-import Input from './Form/Input';
+import { PLATFORMS_NAME } from '@/utils/constant';
+import LinkInput from './Form/LinkInput';
 import FormWrapper from './FormWrapper';
 
 export default function LinksSection() {
-    const { handleState, links: UserLinks } = useContext(MobileUiContext);
+    const { id, handleState, links: UserLinks } = useContext(MobileUiContext);
     const [links, setLinks] = useState<UserLink[]>(UserLinks);
+    const [error, setError] = useState<Record<string, Record<string, Record<'message', string>>>>(
+        {},
+    );
 
     const addNewLink = () => {
         setLinks((pre) => {
@@ -34,6 +36,39 @@ export default function LinksSection() {
         });
     };
 
+    const handleRemove = (index: number) => {
+        setLinks((pre) => {
+            const updatedLinks = [...pre];
+
+            updatedLinks.splice(index, 1);
+
+            return updatedLinks;
+        });
+    };
+
+    const onUpdateUserLinks = async () => {
+        setError({});
+
+        const response = await fetch('/api/user/link', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json', // Tells the server you're sending JSON data
+            },
+            body: JSON.stringify({
+                id,
+                links,
+            }),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+
+            setError(error?.links);
+        } else {
+            alert('Links Updated!');
+        }
+    };
+
     useEffect(() => {
         handleState?.(
             'links',
@@ -46,7 +81,7 @@ export default function LinksSection() {
         <FormWrapper
             title="Customize your links"
             subTitle="Add/edit/remove links below and then share all your profiles with the world!"
-            onSave={() => undefined}
+            onSave={onUpdateUserLinks}
         >
             <div className="mb-5 space-y-4">
                 <button
@@ -58,45 +93,15 @@ export default function LinksSection() {
             </div>
 
             {links.map((link, index) => (
-                <div key={index}>
-                    <div className="mt-4 px-5 py-4 bg-[#fafafa] rounded-md">
-                        <div className="mb-3 flex justify-between text-gray-500">
-                            <div className="font-semibold flex items-center">
-                                <TbMenu className="me-2" />
-                                Link #{index + 1}
-                            </div>
-                            <div>Remove</div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600">
-                                Platform
-                            </label>
-                            <select
-                                value={link.name}
-                                onChange={(e) => {
-                                    handlePlatfromName(index, e.target.value);
-                                }}
-                                className="mt-1 pe-10 block w-full py-2 px-3 border-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-purple-500 focus:ring-purple-500 focus:drop-shadow-lg focus:shadow-purple-500/50 sm:text-sm"
-                            >
-                                {PLATFORMS.map((platform) => (
-                                    <option key={platform.name} value={platform.name}>
-                                        {platform.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="my-3">
-                            <label className="block text-xs font-medium text-gray-600">Link</label>
-                            <Input
-                                value={link.url}
-                                className="mt-1 w-full"
-                                placeholder="https://www.example.com"
-                                onChange={(e) => handlePlatfromUrl(index, e.target.value)}
-                            />
-                        </div>
-                    </div>
-                </div>
+                <LinkInput
+                    key={`${index}-${link.url}-${link.name}`}
+                    index={index}
+                    link={link}
+                    onPlatfromName={handlePlatfromName}
+                    onPlatfromUrl={handlePlatfromUrl}
+                    onRemove={handleRemove}
+                    error={error?.[index]}
+                />
             ))}
         </FormWrapper>
     );

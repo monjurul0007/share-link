@@ -1,4 +1,4 @@
-import { UserLink } from '../Links';
+import { UserLinks } from '../api/userLink';
 
 export interface IUser {
     name: string;
@@ -7,5 +7,6 @@ export interface IUser {
     email: string;
     image: string;
     id: string;
-    links?: UserLink[];
+    links?: UserLinks[];
+    imageData?: Buffer;
 }
