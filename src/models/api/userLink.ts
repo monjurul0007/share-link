@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const linkSchema = z
     .object({
+        id: z.string(),
         name: z.enum(['Github', 'Youtube', 'LinkedIn', 'Twitter']),
         url: z.string(),
     })

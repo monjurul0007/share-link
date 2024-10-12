@@ -4,8 +4,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MobileUiContext } from '@/contexts/MobileUiContext';
 import { UserLinks } from '@/models/api/userLink';
 import { PLATFORMS_NAME } from '@/utils/constant';
-import LinkInput from './Form/LinkInput';
+import { generateRandomNumber } from '@/utils/number';
 import FormWrapper from './FormWrapper';
+import LinkInputDndSection from './LinkInputDndSection';
 
 export default function LinksSection() {
     const { id, handleState, links: userLinks } = useContext(MobileUiContext);
@@ -16,7 +17,10 @@ export default function LinksSection() {
 
     const addNewLink = () => {
         setLinks((pre) => {
-            return [...pre, { name: PLATFORMS_NAME.GITHUB, url: '' }];
+            return [
+                ...pre,
+                { id: generateRandomNumber().toString(), name: PLATFORMS_NAME.GITHUB, url: '' },
+            ];
         });
     };
 
@@ -95,17 +99,14 @@ export default function LinksSection() {
                 </button>
             </div>
 
-            {links.map((link, index) => (
-                <LinkInput
-                    key={`${index}-${link.url}-${link.name}`}
-                    index={index}
-                    link={link}
-                    onPlatfromName={handlePlatfromName}
-                    onPlatfromUrl={handlePlatfromUrl}
-                    onRemove={handleRemove}
-                    error={error?.[index]}
-                />
-            ))}
+            <LinkInputDndSection
+                links={links}
+                onChange={(updatedLinks) => setLinks(updatedLinks)}
+                onPlatfromName={handlePlatfromName}
+                onPlatfromUrl={handlePlatfromUrl}
+                onRemove={handleRemove}
+                errors={error}
+            />
         </FormWrapper>
     );
 }
