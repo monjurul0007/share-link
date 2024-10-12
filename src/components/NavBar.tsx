@@ -5,7 +5,6 @@ import { FaRegEye } from 'react-icons/fa';
 import { FaLink } from 'react-icons/fa6';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button } from '@headlessui/react';
 import logo from '@/assets/logo.png';
 import clsx from 'clsx';
 
@@ -19,7 +18,11 @@ const navItems = [
     },
 ];
 
-export default function NavBar() {
+interface NavBarProps {
+    userId?: string;
+}
+
+export default function NavBar({ userId }: NavBarProps) {
     const pathname = usePathname();
     const router = useRouter();
 
@@ -37,24 +40,27 @@ export default function NavBar() {
             </div>
             <div className="flex justify-center grow font-semibold">
                 {navItems.map((item, index) => (
-                    <Button
+                    <button
                         key={item.id}
                         className={clsx(
-                            'data-[hover]:bg-purple-100 text-purple-700 px-4 py-2 rounded-md flex items-center sm:mx-3',
+                            'hover:bg-purple-100 text-purple-700 px-4 py-2 rounded-md flex items-center sm:mx-3',
                             { 'bg-purple-200': pathname === item.link },
                         )}
                         onClick={() => onNavClick(index)}
                     >
                         {item.icon}
                         <span className="max-sm:hidden">{item.name}</span>
-                    </Button>
+                    </button>
                 ))}
             </div>
             <div>
-                <Button className="font-semibold border-2 border-purple-700 text-purple-700 px-4 py-2 rounded-md data-[hover]:bg-purple-700 data-[hover]:text-white">
+                <button
+                    onClick={() => router.push(`/preview/${userId}`)}
+                    className="font-semibold border-2 border-purple-700 text-purple-700 px-4 py-2 rounded-md hover:bg-purple-700 hover:text-white"
+                >
                     <FaRegEye className="sm:hidden" />
                     <span className="max-sm:hidden">Preview</span>
-                </Button>
+                </button>
             </div>
         </div>
     );

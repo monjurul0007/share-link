@@ -6,7 +6,7 @@ import { IUser } from '@/models/db/Users';
 import { getUserById } from '@/services/userService';
 import { getServerSession } from 'next-auth';
 
-export default async function ProfileLayout({
+export default async function EditorLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
@@ -20,7 +20,7 @@ export default async function ProfileLayout({
 
     return (
         <div className="container mx-auto px-3 lg:px-0">
-            <NavBar />
+            <NavBar userId={userInfo?.id} />
             <div className="flex">
                 <MobileUiContextProvider userDataString={JSON.stringify(userInfo)}>
                     <MobileUI />

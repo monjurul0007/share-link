@@ -1,8 +1,9 @@
 'use client';
 
 import { FC, ReactNode, createContext, useMemo, useState } from 'react';
-import { UserLink } from '@/models/Links';
+import { UserLinks } from '@/models/api/userLink';
 import { IUser } from '@/models/db/Users';
+import { generateImageLink } from '@/utils/image';
 import { divideString } from '@/utils/string';
 
 interface MobileUiContextProps {
@@ -11,8 +12,8 @@ interface MobileUiContextProps {
     firstName?: string;
     lastName?: string;
     email?: string;
-    links: UserLink[];
-    handleState?: (name: keyof MobileUiContextProps, value: string | UserLink[]) => void;
+    links: UserLinks[];
+    handleState?: (name: keyof MobileUiContextProps, value: string | UserLinks[]) => void;
 }
 
 export const MobileUiContext = createContext<MobileUiContextProps>({
@@ -29,7 +30,7 @@ export const MobileUiContextProvider: FC<{
     children: ReactNode;
 }> = ({ userDataString, children }) => {
     const user = JSON.parse(userDataString || '') as IUser;
-    const imageUrl = user?.imageData ? `data:image/png;base64,${user.imageData}` : undefined;
+    const imageUrl = generateImageLink(user?.imageData);
     const [fName, lName] = divideString(user?.name || '');
     const [firstName, setFirstName] = useState(
         user?.firstName && user.lastName ? user.firstName : fName,
@@ -38,10 +39,10 @@ export const MobileUiContextProvider: FC<{
         user?.firstName && user?.lastName ? user.lastName : lName,
     );
     const [email, setEmail] = useState(user?.email);
-    const [links, setLinks] = useState<UserLink[]>(user?.links || []);
+    const [links, setLinks] = useState<UserLinks[]>(user?.links || []);
     const [imageSrc, setImageSrc] = useState<string | undefined>(imageUrl);
 
-    const handleState = (name: keyof MobileUiContextProps, value: string | UserLink[]) => {
+    const handleState = (name: keyof MobileUiContextProps, value: string | UserLinks[]) => {
         switch (name) {
             case 'imageSrc':
                 setImageSrc(value as string);
@@ -56,7 +57,7 @@ export const MobileUiContextProvider: FC<{
                 setEmail(value as string);
                 break;
             case 'links':
-                setLinks(value as UserLink[]);
+                setLinks(value as UserLinks[]);
                 break;
             default:
                 break;
