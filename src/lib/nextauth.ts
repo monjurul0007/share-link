@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
         },
 
         async session({ session, token }) {
-            (session.user as CustomSession)['id'] = token.id as string;
+            (session.user as CustomSession)['id'] = token.sub as string;
 
             return session;
         },
