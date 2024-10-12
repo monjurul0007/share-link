@@ -1,13 +1,16 @@
 import { ChangeEventHandler, useState } from 'react';
 import { TbMenu } from 'react-icons/tb';
-import { UserLink } from '@/models/Links';
-import { PLATFORMS } from '@/utils/constant';
+import { UserLinks } from '@/models/api/userLink';
+import { PLATFORMS, PLATFORMS_NAME } from '@/utils/constant';
 import Input from './Input';
 
 interface LinkInputProps {
     index: number;
-    link: UserLink;
-    onPlatfromName: (inx: number, value: string) => void;
+    link: UserLinks;
+    onPlatfromName: (
+        inx: number,
+        value: (typeof PLATFORMS_NAME)[keyof typeof PLATFORMS_NAME],
+    ) => void;
     onPlatfromUrl: (inx: number, value: string) => void;
     onRemove: (inx: number) => void;
     error: Record<string, Record<'message', string>>;
@@ -48,7 +51,10 @@ export default function LinkInput({
                 <select
                     value={link.name}
                     onChange={(e) => {
-                        onPlatfromName(index, e.target.value);
+                        onPlatfromName(
+                            index,
+                            e.target.value as (typeof PLATFORMS_NAME)[keyof typeof PLATFORMS_NAME],
+                        );
                     }}
                     className="mt-1 pe-10 block w-full py-2 px-3 border-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:border-purple-500 focus:ring-purple-500 focus:drop-shadow-lg focus:shadow-purple-500/50 sm:text-sm"
                 >

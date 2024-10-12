@@ -5,7 +5,7 @@ export const PLATFORMS_NAME = {
     YOUTUBE: 'Youtube',
     LINKEDIN: 'LinkedIn',
     TWITTER: 'Twitter',
-};
+} as const;
 
 export const PLATFORMS = [
     { name: PLATFORMS_NAME.GITHUB, prefix: 'https://www.github.com/' },

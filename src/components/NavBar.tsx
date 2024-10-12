@@ -9,11 +9,11 @@ import logo from '@/assets/logo.png';
 import clsx from 'clsx';
 
 const navItems = [
-    { id: 1, name: 'Links', link: '/profile/links', icon: <FaLink className="text-xl me-2" /> },
+    { id: 1, name: 'Links', link: '/editor/links', icon: <FaLink className="text-xl me-2" /> },
     {
         id: 2,
         name: 'Profile Details',
-        link: '/profile/info',
+        link: '/editor/info',
         icon: <CgProfile className="text-xl sm:me-2" />,
     },
 ];

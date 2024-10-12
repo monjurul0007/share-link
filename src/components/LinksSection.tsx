@@ -2,14 +2,14 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { MobileUiContext } from '@/contexts/MobileUiContext';
-import { UserLink } from '@/models/Links';
+import { UserLinks } from '@/models/api/userLink';
 import { PLATFORMS_NAME } from '@/utils/constant';
 import LinkInput from './Form/LinkInput';
 import FormWrapper from './FormWrapper';
 
 export default function LinksSection() {
-    const { id, handleState, links: UserLinks } = useContext(MobileUiContext);
-    const [links, setLinks] = useState<UserLink[]>(UserLinks);
+    const { id, handleState, links: userLinks } = useContext(MobileUiContext);
+    const [links, setLinks] = useState<UserLinks[]>(userLinks);
     const [error, setError] = useState<Record<string, Record<string, Record<'message', string>>>>(
         {},
     );
@@ -20,7 +20,10 @@ export default function LinksSection() {
         });
     };
 
-    const handlePlatfromName = (index: number, name: string) => {
+    const handlePlatfromName = (
+        index: number,
+        name: (typeof PLATFORMS_NAME)[keyof typeof PLATFORMS_NAME],
+    ) => {
         setLinks((pre) => {
             pre[index].name = name;
 
