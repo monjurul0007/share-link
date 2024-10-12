@@ -53,8 +53,8 @@ export default function ProfileSection() {
         formData.append('lastName', lastName);
         formData.append('email', email as string);
 
-        if (imageSrc) {
-            formData.append('image', imageSrc);
+        if (imageRawSrc) {
+            formData.append('image', imageRawSrc);
         }
 
         setError({});

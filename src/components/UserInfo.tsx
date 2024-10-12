@@ -18,7 +18,11 @@ export default function UserInfo({
     lastName,
     email,
 }: UserInfoProps) {
-    const src = imageSrc ? imageSrc : generateImageLink(JSON.parse(imageBufferString || '{}'));
+    const src = imageSrc
+        ? imageSrc
+        : imageBufferString
+          ? generateImageLink(JSON.parse(imageBufferString || '{}'))
+          : undefined;
 
     return (
         <div className="w-full flex flex-col justify-center">
