@@ -29,7 +29,7 @@ export const MobileUiContextProvider: FC<{
     userDataString: string | null;
     children: ReactNode;
 }> = ({ userDataString, children }) => {
-    const user = JSON.parse(userDataString || '') as IUser;
+    const user = JSON.parse(userDataString || '{}') as IUser;
     const imageUrl = generateImageLink(user?.imageData);
     const [fName, lName] = divideString(user?.name || '');
     const [firstName, setFirstName] = useState(
