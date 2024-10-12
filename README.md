@@ -75,3 +75,7 @@ To start the development server:
     npm run dev
     ```
     This will start the development server at http://localhost:3000.
+
+#### Hey 👋! As you are now wrapped up, you can checkout the live demo of this project. https://share-link-ecru.vercel.app ✅
+
+#### And don't forget to checkout my profile https://share-link-ecru.vercel.app/preview/102926770508308469066
